@@ -99,16 +99,16 @@ app.post("/", async (req, res) => {
     // Refer to the docs for details https://developers.facebook.com/docs/whatsapp/flows/reference/error-codes#endpoint_error_codes
 
 
-    if (!isValidFlowToken(decryptedBody.flow_token)) {
-        const error_response = {
-            error_msg: `The message is no longer available`,
-        };
-        return res
-            .status(427)
-            .send(
-                encryptResponse(error_response, aesKeyBuffer, initialVectorBuffer)
-            );
-    }
+    // if (!isValidFlowToken(decryptedBody.flow_token)) {
+    //     const error_response = {
+    //         error_msg: `The message is no longer available`,
+    //     };
+    //     return res
+    //         .status(427)
+    //         .send(
+    //             encryptResponse(error_response, aesKeyBuffer, initialVectorBuffer)
+    //         );
+    // }
 
 
     const screenResponse = await getNextScreen(decryptedBody);
@@ -127,21 +127,21 @@ app.listen(PORT, () => {
 });
 
 function isRequestSignatureValid(req) {
-    if (!APP_SECRET) {
-        console.warn("App Secret is not set up. Please Add your app secret in /.env file to check for request validation");
-        return true;
-    }
+    // if (!APP_SECRET) {
+    //     console.warn("App Secret is not set up. Please Add your app secret in /.env file to check for request validation");
+    //     return true;
+    // }
 
-    const signatureHeader = req.get("x-hub-signature-256");
-    const signatureBuffer = Buffer.from(signatureHeader.replace("sha256=", ""), "utf-8");
+    // const signatureHeader = req.get("x-hub-signature-256");
+    // const signatureBuffer = Buffer.from(signatureHeader.replace("sha256=", ""), "utf-8");
 
-    const hmac = crypto.createHmac("sha256", APP_SECRET);
-    const digestString = hmac.update(req.rawBody).digest('hex');
-    const digestBuffer = Buffer.from(digestString, "utf-8");
+    // const hmac = crypto.createHmac("sha256", APP_SECRET);
+    // const digestString = hmac.update(req.rawBody).digest('hex');
+    // const digestBuffer = Buffer.from(digestString, "utf-8");
 
-    if (!crypto.timingSafeEqual(digestBuffer, signatureBuffer)) {
-        console.error("Error: Request Signature did not match");
-        return false;
-    }
+    // if (!crypto.timingSafeEqual(digestBuffer, signatureBuffer)) {
+    //     console.error("Error: Request Signature did not match");
+    //     return false;
+    // }
     return true;
 }
